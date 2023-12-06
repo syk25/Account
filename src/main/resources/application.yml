@@ -1,9 +1,6 @@
 spring:
-  redis:
-    host: 127.0.0.1
-    port: 6739
   datasource:
-    url: jdbc:h2:mem:Test
+    url: jdbc:h2:mem:test
     username: sa
     password:
     driverClassName: org.h2.Driver
@@ -20,3 +17,6 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+  redis:
+    host: 127.0.0.1
+    port: 6739
