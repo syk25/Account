@@ -57,6 +57,7 @@ public class AccountService {
         ));
     }
 
+
     private void validateCreateAccount(AccountUser accountUser) {
         if (accountRepository.countByAccountUser(accountUser) >= 10) {
             throw new AccountException(ErrorCode.MAX_ACCOUNT_PER_USER_10);
@@ -81,6 +82,7 @@ public class AccountService {
         return AccountDto.fromEntityForDelete(account);
     }
 
+
     private void validateDeleteAccount(AccountUser accountUser, Account account) {
         if (!Objects.equals(accountUser.getId(), account.getAccountUser().getId())) {
             throw new AccountException(ACCOUNT_AND_USER_MISMATCHED);
@@ -99,6 +101,7 @@ public class AccountService {
         return accountRepository.getReferenceById(Id);
     }
 
+    @Transactional
     public List<AccountDto> getAccountsByUserId(Long userId) {
 
         AccountUser accountUser = accountUserRepository.findById(userId)
@@ -107,7 +110,7 @@ public class AccountService {
         List<Account> accounts = accountRepository.findByAccountUser(accountUser);
 
         return accounts.stream()
-                .map(AccountDto::fromEntity)
+                .map(AccountDto::fromEntityForInfo)
                 .collect(Collectors.toList());
     }
 }

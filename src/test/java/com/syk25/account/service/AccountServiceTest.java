@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +26,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@SuppressWarnings("SpellCheckingInspection")
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
     @Mock
@@ -242,7 +245,7 @@ class AccountServiceTest {
         given(accountRepository.findByAccountNumber(anyString()))
                 .willReturn(Optional.of(Account.builder()
                         .accountUser(pobi)
-                        .balance(0L)
+                        .balance(10000L)
                         .accountNumber("1000000012").build()));
 
         // when
@@ -253,6 +256,60 @@ class AccountServiceTest {
 
         // then
         assertEquals(ErrorCode.BALANCE_EXISTS, exception.getErrorCode());
+    }
+
+    @Test
+    public void getAccountByUserId_success() {
+        // given
+        AccountUser pobi = AccountUser.builder()
+                .id(12L)
+                .name("Pobi")
+                .build();
+
+        // when
+        List<Account> accounts = Arrays.asList(
+                Account.builder()
+                        .accountUser(pobi)
+                        .accountNumber("5678901234")
+                        .balance(2000L)
+                        .build(),
+                Account.builder()
+                        .accountUser(pobi)
+                        .accountNumber("3456789012")
+                        .balance(3000L)
+                        .build(),
+                Account.builder()
+                        .accountUser(pobi)
+                        .accountNumber("1234567890")
+                        .balance(1000L)
+                        .build()
+        );
+
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.of(pobi));
+        given(accountRepository.findByAccountUser(any()))
+                .willReturn(accounts);
+
+        // when
+        List<AccountDto> accountDtos = accountService.getAccountsByUserId(1L);
+
+        // then
+        assertEquals(3, accountDtos.size());
+        assertEquals("5678901234", accountDtos.get(0).getAccountNumber());
+        assertEquals("3456789012", accountDtos.get(1).getAccountNumber());
+        assertEquals("1234567890", accountDtos.get(2).getAccountNumber());
+    }
+
+    @Test
+    public void getAccounts_failed() {
+        // given
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.empty());
+        // when
+        AccountException exception = assertThrows(AccountException.class,
+                () -> accountService.deleteAccount(1L,"5678901234"));
+        // then
+        assertEquals(ErrorCode.ACCOUNT_ALREADY_UNREGISTERED, exception.getErrorCode());
     }
 
 }

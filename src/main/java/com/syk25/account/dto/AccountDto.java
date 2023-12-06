@@ -36,4 +36,13 @@ public class AccountDto {
                 .unRegisteredAt(LocalDateTime.now())
                 .build();
     }
+
+    public static AccountDto fromEntityForInfo(Account account) {
+        return AccountDto.builder()
+                .userId(account.getAccountUser().getId())
+                .accountNumber(account.getAccountNumber())
+                .balance(account.getBalance())
+                .registeredAt(account.getRegisteredAt())
+                .build();
+    }
 }

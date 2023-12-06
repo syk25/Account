@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "userId": 1,
-  "initialBalance": 0
+  "initialBalance": 10000
 }
 
 ### Delete Account
@@ -15,3 +15,8 @@ Content-Type: application/json
   "userId": 1,
   "accountNumber": "100000001"
 }
+
+### GET Account
+// Tip: putting scheme:// + host to {{host}} allows switching schemes between different environments
+GET http://localhost:8080/account?user_id=1
+Accept: application/json
