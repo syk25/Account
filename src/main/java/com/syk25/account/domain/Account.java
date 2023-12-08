@@ -1,6 +1,8 @@
 package com.syk25.account.domain;
 
+import com.syk25.account.exception.AccountException;
 import com.syk25.account.type.AccountStatus;
+import com.syk25.account.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -38,7 +40,10 @@ public class Account {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-
-
-
+    public void useBalance(Long amount){
+        if(amount > balance){
+            throw new AccountException(ErrorCode.AMMOUNT_EXCEED_BALANCE);
+        }
+        balance -= amount;
+    }
 }
