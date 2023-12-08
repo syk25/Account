@@ -25,3 +25,6 @@
 - SpringBoot 3.2.0
 - H2 DataBase
 - Embedded Redis 
+
+## 이슈관리 로그
+[이슈 관리](issues.md)</br>

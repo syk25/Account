@@ -34,9 +34,9 @@ public class TransactionService {
     private final AccountUserRepository accountUserRepository;
     private final AccountRepository accountRepository;
 
-
     @Transactional
     public TransactionDto useBalance(Long userId, String accountNumber, Long amount) {
+
 
         AccountUser user = accountUserRepository
                 .findById(userId)
@@ -49,21 +49,21 @@ public class TransactionService {
 
         account.useBalance(amount);
 
-        return TransactionDto.fromEntity(saveAndGetTransaction(S,amount,account));
+        return TransactionDto.fromEntity(saveAndGetTransaction(S, amount, account));
     }
 
 
     private void validateUseBalance(AccountUser user, Account account, Long amount) {
         if(!Objects.equals(user.getId(), account.getAccountUser().getId())){
+
             throw new AccountException(ErrorCode.ACCOUNT_AND_USER_MISMATCHED);
         }
         if(account.getAccountStatus() != AccountStatus.IN_USE){
             throw new AccountException(ErrorCode.ACCOUNT_ALREADY_UNREGISTERED);
         }
         if(account.getBalance() < amount){
-            throw new AccountException(ErrorCode.AMMOUNT_EXCEED_BALANCE);
+            throw new AccountException(ErrorCode.AMOUNT_EXCEED_BALANCE);
         }
-
     }
 
     @Transactional
@@ -71,7 +71,7 @@ public class TransactionService {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountException((ACCOUNT_NOT_FOUND)));
 
-        saveAndGetTransaction(F, amount, account);
+        saveAndGetTransaction(F ,amount, account);
     }
 
     private Transaction saveAndGetTransaction(TransactionResultType transactionResultType, Long amount, Account account) {
@@ -84,7 +84,6 @@ public class TransactionService {
                         .balanceSnapShot(account.getBalance())
                         .transactionId(UUID.randomUUID().toString().replace("-",""))
                         .transactedAt(LocalDateTime.now())
-                        .build()
-        );
+                        .build());
     }
 }

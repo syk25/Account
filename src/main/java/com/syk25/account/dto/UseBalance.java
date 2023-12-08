@@ -22,7 +22,7 @@ public class UseBalance {
         private String accountNumber;
 
         @NotNull
-        @Min(0)
+        @Min(10)
         @Max(1_000_000_000)
         private Long amount;
     }

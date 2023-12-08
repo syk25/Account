@@ -42,7 +42,7 @@ public class Account {
 
     public void useBalance(Long amount){
         if(amount > balance){
-            throw new AccountException(ErrorCode.AMMOUNT_EXCEED_BALANCE);
+            throw new AccountException(ErrorCode.AMOUNT_EXCEED_BALANCE);
         }
         balance -= amount;
     }

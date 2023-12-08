@@ -36,7 +36,7 @@ public class TransactionController {
                     transactionService.useBalance(request.getUserId(), request.getAccountNumber(),
                             request.getAmount()));
         } catch (AccountException e) {
-            log.error("Failed to use balance.");
+            log.error("잔액 사용이 불가합니다.");
 
             transactionService.saveFailedUseTransaction(
                     request.getAccountNumber(),
