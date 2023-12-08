@@ -49,7 +49,7 @@ public class TransactionService {
 
         account.useBalance(amount);
 
-        return saveAndGetTransaction(S,amount,account);
+        return TransactionDto.fromEntity(saveAndGetTransaction(S,amount,account));
     }
 
 
