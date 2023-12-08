@@ -22,8 +22,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.syk25.account.type.ErrorCode.*;
-import static com.syk25.account.type.ErrorCode.ACCOUNT_NOT_FOUND;
-import static com.syk25.account.type.ErrorCode.TRANSACTION_CANCEL_AVAILABLE_DATE_EXPIRED;
 import static com.syk25.account.type.TransactionResultType.F;
 import static com.syk25.account.type.TransactionResultType.S;
 import static com.syk25.account.type.TransactionType.CANCEL;
@@ -97,7 +95,7 @@ public class TransactionService {
                 .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
         validateCancelBalance(transaction, account, amount);
 
-        account.useBalance(amount);
+        account.cancelBalance(amount);
 
         return TransactionDto.fromEntity(saveAndGetTransaction(CANCEL, S, amount, account));
     }
@@ -120,5 +118,12 @@ public class TransactionService {
                 .orElseThrow(() -> new AccountException((ACCOUNT_NOT_FOUND)));
 
         saveAndGetTransaction(CANCEL, F, amount, account);
+    }
+
+    public TransactionDto queryTransaction(String transactionId) {
+        return TransactionDto.fromEntity(
+                transactionRepository.findByTransactionId(transactionId)
+                        .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND))
+        );
     }
 }
